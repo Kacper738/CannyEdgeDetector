@@ -28,3 +28,23 @@ def gaussian_filter(image, kernel_size=5, kernel_sigma=1.0):
     """
 
     return convolve(image, gaussian_kernel(kernel_size, kernel_sigma))
+
+
+def sobel_filter(image):
+    """
+    Uses sobel's kernel to calculate image gradient, magnitude and slope
+    of this gradient
+
+    :param image: 2d array, image
+    :return: 2d array, 2d array, magnitude and slope
+    """
+    kernel_x = np.array([[-1, 0, 1], [-2, 0, 2], [-1, 0, 1]])
+    kernel_y = np.array([[-1, -2, -1], [0, 0, 0], [1, 2, 1]])
+
+    Gx = convolve(image, kernel_x)
+    Gy = convolve(image, kernel_y)
+
+    G = np.sqrt(Gx**2 + Gy**2)
+    theta = np.arctan2(Gy, Gx)
+
+    return G, theta
