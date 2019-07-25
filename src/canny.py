@@ -30,6 +30,48 @@ def gaussian_filter(image, kernel_size=5, kernel_sigma=1.0):
     return convolve(image, gaussian_kernel(kernel_size, kernel_sigma))
 
 
+def non_max_supression(image, theta):
+    """
+    Finds thinner edges
+
+    :param image: 2d array, image with edges
+    :param theta: 2d array, gradient slope
+    :return: ndarray, image with thin edges
+    """
+    height, width = image.shape
+    output_image = np.zeros((height, width))
+    angle = theta * 180 / np.pi
+    angle[angle < 0] += 180
+
+    for i in range(1, height-1):
+        for j in range(1, width-1):
+
+            # 0 degrees
+            if (0 <= angle[i, j] < 22.5) or (157.5 <= angle[i, j] <= 180):
+                left = image[i, j-1]
+                right = image[i, j+1]
+
+            # 45 degrees
+            elif 22.5 <= angle[i, j] < 67.5:
+                left = image[i-1, j+1]
+                right = image[i+1, j-1]
+
+            # 90 degrees
+            elif 67.5 <= angle[i, j] < 112.5:
+                left = image[i-1, j]
+                right = image[i+1, j]
+
+            # 135 degrees
+            elif 112.5 <= angle[i, j] < 157.5:
+                left = image[i-1, j-1]
+                right = image[i+1, j+1]
+
+            if (image[i, j] > left) and (image[i, j] > right):
+                output_image[i, j] = image[i, j]
+
+    return output_image
+
+
 def sobel_filter(image):
     """
     Uses sobel's kernel to calculate image gradient, magnitude and slope
