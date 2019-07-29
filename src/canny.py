@@ -2,13 +2,16 @@ import numpy as np
 from scipy.ndimage.filters import convolve
 
 
-def double_threshold(image, low_threshold_ratio, high_threshold_ratio):
+def double_threshold(image, low_threshold_ratio, high_threshold_ratio,
+                     weak_pixel_value, strong_pixel_value=255):
     """
     Splits pixels from image into three groups by two thresholds
 
     :param image: 2d array, image
-    :param low_threshold_ratio: float, range: 0-1, low threshold ratio
-    :param high_threshold_ratio: float, range: 0-1, high threshold ratio
+    :param low_threshold_ratio: float, range: 0.0 to 1.0, low threshold
+    :param high_threshold_ratio: float, range: 0.0 to 1.0, high threshold
+    :param weak_pixel_value: int, range: 0 to 255, weak pixel value
+    :param strong_pixel_value: int, range 0 to 255, strong pixel value
     :return: 2d array, pixels from original image split into 3 groups
     """
     high_threshold = image.max() * high_threshold_ratio
@@ -19,8 +22,8 @@ def double_threshold(image, low_threshold_ratio, high_threshold_ratio):
     weak_x, weak_y = np.where(np.logical_and(image > low_threshold,
                                              image < high_threshold))
 
-    result[strong_x, strong_y] = 255
-    result[weak_x, weak_y] = 50
+    result[strong_x, strong_y] = strong_pixel_value
+    result[weak_x, weak_y] = weak_pixel_value
 
     return result
 
