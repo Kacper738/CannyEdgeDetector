@@ -2,6 +2,29 @@ import numpy as np
 from scipy.ndimage.filters import convolve
 
 
+def double_threshold(image, low_threshold_ratio, high_threshold_ratio):
+    """
+    Splits pixels from image into three groups by two thresholds
+
+    :param image: 2d array, image
+    :param low_threshold_ratio: float, range: 0-1, low threshold ratio
+    :param high_threshold_ratio: float, range: 0-1, high threshold ratio
+    :return: 2d array, pixels from original image split into 3 groups
+    """
+    high_threshold = image.max() * high_threshold_ratio
+    low_threshold = image.max() * low_threshold_ratio
+    result = np.zeros(image.shape)
+
+    strong_x, strong_y = np.where(image > high_threshold)
+    weak_x, weak_y = np.where(np.logical_and(image > low_threshold,
+                                             image < high_threshold))
+
+    result[strong_x, strong_y] = 255
+    result[weak_x, weak_y] = 50
+
+    return result
+
+
 def gaussian_kernel(size=5, sigma=1.0):
     """
     Returns 2d gaussian kernel
