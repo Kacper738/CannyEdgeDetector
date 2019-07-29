@@ -53,6 +53,37 @@ def gaussian_filter(image, kernel_size=5, kernel_sigma=1.0):
     return convolve(image, gaussian_kernel(kernel_size, kernel_sigma))
 
 
+def hysteresis(image, weak_pixel_value, strong_pixel_value=255):
+    """
+    Transforms weak pixels into strong if they have at least one strong
+    neighbour
+
+    :param image: 2d array, image
+    :param weak_pixel_value: int, value for weak pixel
+    :param strong_pixel_value: int, value for strong pixel (default 255)
+    :return: 2d array, image with only strong or non-relevant pixels
+    """
+    height, width = image.shape
+
+    for i in range(1, height-1):
+        for j in range(1, width-1):
+
+            if image[i, j] == weak_pixel_value:
+                if ((image[i-1, j-1] == strong_pixel_value)
+                        or (image[i-1, j] == strong_pixel_value)
+                        or (image[i-1, j+1] == strong_pixel_value)
+                        or (image[i, j-1] == strong_pixel_value)
+                        or (image[i, j+1] == strong_pixel_value)
+                        or (image[i+1, j-1] == strong_pixel_value)
+                        or (image[i+1, j] == strong_pixel_value)
+                        or (image[i+1, j+1] == strong_pixel_value)):
+                    image[i, j] = strong_pixel_value
+                else:
+                    image[i, j] = 0
+
+    return image
+
+
 def non_max_supression(image, theta):
     """
     Finds thinner edges
