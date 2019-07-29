@@ -2,6 +2,33 @@ import numpy as np
 from scipy.ndimage.filters import convolve
 
 
+def detect(image, low_threshold_ratio, high_threshold_ratio, weak_pixel_value,
+           strong_pixel_value=255, gaussian_kernel_size=5,
+           gaussian_kernel_sigma=1.0):
+    """
+    Applies canny edge detection algorithm to given image
+
+    :param image: 2d array, image
+    :param low_threshold_ratio: float, range: 0.0 to 1.0, low threshold
+    :param high_threshold_ratio: float, range: 0.0 to 1.0, high threshold
+    :param weak_pixel_value: int, range: 0 to 255, weak pixel value
+    :param strong_pixel_value: int, range 0 to 255, strong pixel value
+    (default 255)
+    :param gaussian_kernel_size: int, size of gaussian filter kernel
+    (default 5)
+    :param gaussian_kernel_sigma: float, standard deviation (default 1.0)
+    :return: 2d array, image with edges
+    """
+    image = gaussian_filter(image, gaussian_kernel_size, gaussian_kernel_sigma)
+    image, theta = sobel_filter(image)
+    image = non_max_supression(image, theta)
+    image = double_threshold(image, low_threshold_ratio, high_threshold_ratio,
+                             weak_pixel_value, strong_pixel_value)
+    image = hysteresis(image, weak_pixel_value, strong_pixel_value)
+
+    return image
+
+
 def double_threshold(image, low_threshold_ratio, high_threshold_ratio,
                      weak_pixel_value, strong_pixel_value=255):
     """
@@ -12,6 +39,7 @@ def double_threshold(image, low_threshold_ratio, high_threshold_ratio,
     :param high_threshold_ratio: float, range: 0.0 to 1.0, high threshold
     :param weak_pixel_value: int, range: 0 to 255, weak pixel value
     :param strong_pixel_value: int, range 0 to 255, strong pixel value
+    (default 255)
     :return: 2d array, pixels from original image split into 3 groups
     """
     high_threshold = image.max() * high_threshold_ratio
