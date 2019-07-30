@@ -17,7 +17,7 @@ def detect(image, low_threshold_ratio, high_threshold_ratio, weak_pixel_value,
     :param gaussian_kernel_size: int, size of gaussian filter kernel
     (default 5)
     :param gaussian_kernel_sigma: float, standard deviation (default 1.0)
-    :return: 2d array, image with edges
+    :return: 2d ndarray, image with edges
     """
     image = gaussian_filter(image, gaussian_kernel_size, gaussian_kernel_sigma)
     image, theta = sobel_filter(image)
@@ -40,7 +40,7 @@ def double_threshold(image, low_threshold_ratio, high_threshold_ratio,
     :param weak_pixel_value: int, range: 0 to 255, weak pixel value
     :param strong_pixel_value: int, range 0 to 255, strong pixel value
     (default 255)
-    :return: 2d array, pixels from original image split into 3 groups
+    :return: 2d ndarray, pixels from original image split into 3 groups
     """
     high_threshold = image.max() * high_threshold_ratio
     low_threshold = image.max() * low_threshold_ratio
@@ -58,11 +58,11 @@ def double_threshold(image, low_threshold_ratio, high_threshold_ratio,
 
 def gaussian_kernel(size=5, sigma=1.0):
     """
-    Returns 2d gaussian kernel
+    Creates 2d gaussian kernel
 
     :param size: int, size of kernel (default 5)
     :param sigma: float, standard deviation (default 1.0)
-    :return: ndarray, gaussian kernel
+    :return: 2d ndarray, gaussian kernel
     """
     x, y = np.mgrid[-(size//2):(size//2)+1, -(size//2):(size//2)+1]
     normal = 1 / (2 * np.pi * sigma**2)
@@ -73,12 +73,12 @@ def gaussian_kernel(size=5, sigma=1.0):
 
 def gaussian_filter(image, kernel_size=5, kernel_sigma=1.0):
     """
-    Returns image convolved with gaussian kernel
+    Convolves image with gaussian kernel
 
     :param image: 2d array, image
     :param kernel_size: int, size of kernel (default 5)
     :param kernel_sigma: float, standard deviation (default 1.0)
-    :return: ndarray, convolved image
+    :return: 2d ndarray, convolved image
     """
 
     return convolve(image, gaussian_kernel(kernel_size, kernel_sigma))
@@ -92,7 +92,7 @@ def hysteresis(image, weak_pixel_value, strong_pixel_value=255):
     :param image: 2d array, image
     :param weak_pixel_value: int, value for weak pixel
     :param strong_pixel_value: int, value for strong pixel (default 255)
-    :return: 2d array, image with only strong or non-relevant pixels
+    :return: 2d ndarray, image with only strong or non-relevant pixels
     """
     height, width = image.shape
 
@@ -121,7 +121,7 @@ def non_max_supression(image, theta):
 
     :param image: 2d array, image with edges
     :param theta: 2d array, gradient slope
-    :return: ndarray, image with thin edges
+    :return: 2d ndarray, image with thin edges
     """
     height, width = image.shape
     output_image = np.zeros((height, width))
@@ -163,7 +163,7 @@ def sobel_filter(image):
     of this gradient
 
     :param image: 2d array, image
-    :return: 2d array, 2d array, magnitude and slope
+    :return: 2d ndarray, 2d ndarray, magnitude and slope
     """
     kernel_x = np.array([[-1, 0, 1], [-2, 0, 2], [-1, 0, 1]])
     kernel_y = np.array([[-1, -2, -1], [0, 0, 0], [1, 2, 1]])
@@ -173,5 +173,5 @@ def sobel_filter(image):
 
     G = np.sqrt(Gx**2 + Gy**2)
     theta = np.arctan2(Gy, Gx)
-
+    
     return G, theta
