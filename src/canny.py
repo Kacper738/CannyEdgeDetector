@@ -2,8 +2,8 @@ import numpy as np
 from scipy.ndimage.filters import convolve
 
 
-def detect(image, low_threshold_ratio, high_threshold_ratio, weak_pixel_value,
-           strong_pixel_value=255, gaussian_kernel_size=5,
+def detect(image, low_threshold_ratio, high_threshold_ratio,
+           weak_pixel_value=1, strong_pixel_value=255, gaussian_kernel_size=5,
            gaussian_kernel_sigma=1.0):
     """
     Applies canny edge detection algorithm to given image
@@ -11,7 +11,7 @@ def detect(image, low_threshold_ratio, high_threshold_ratio, weak_pixel_value,
     :param image: 2d array, image
     :param low_threshold_ratio: float, range: 0.0 to 1.0, low threshold
     :param high_threshold_ratio: float, range: 0.0 to 1.0, high threshold
-    :param weak_pixel_value: int, range: 0 to 255, weak pixel value
+    :param weak_pixel_value: int, range: 0 to 255, weak pixel value (default 1)
     :param strong_pixel_value: int, range 0 to 255, strong pixel value
     (default 255)
     :param gaussian_kernel_size: int, size of gaussian filter kernel
@@ -30,7 +30,7 @@ def detect(image, low_threshold_ratio, high_threshold_ratio, weak_pixel_value,
 
 
 def double_threshold(image, low_threshold_ratio, high_threshold_ratio,
-                     weak_pixel_value, strong_pixel_value=255):
+                     weak_pixel_value=1, strong_pixel_value=255):
     """
     Splits pixels from image into three groups by two thresholds
 
@@ -38,6 +38,7 @@ def double_threshold(image, low_threshold_ratio, high_threshold_ratio,
     :param low_threshold_ratio: float, range: 0.0 to 1.0, low threshold
     :param high_threshold_ratio: float, range: 0.0 to 1.0, high threshold
     :param weak_pixel_value: int, range: 0 to 255, weak pixel value
+    (default 1)
     :param strong_pixel_value: int, range 0 to 255, strong pixel value
     (default 255)
     :return: 2d ndarray, pixels from original image split into 3 groups
@@ -84,13 +85,13 @@ def gaussian_filter(image, kernel_size=5, kernel_sigma=1.0):
     return convolve(image, gaussian_kernel(kernel_size, kernel_sigma))
 
 
-def hysteresis(image, weak_pixel_value, strong_pixel_value=255):
+def hysteresis(image, weak_pixel_value=1, strong_pixel_value=255):
     """
     Transforms weak pixels into strong if they have at least one strong
     neighbour
 
     :param image: 2d array, image
-    :param weak_pixel_value: int, value for weak pixel
+    :param weak_pixel_value: int, value for weak pixel (default 1)
     :param strong_pixel_value: int, value for strong pixel (default 255)
     :return: 2d ndarray, image with only strong or non-relevant pixels
     """
