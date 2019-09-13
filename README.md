@@ -9,8 +9,13 @@ Algorithm consists of 5 stages:
 4. Double thresholding to split edge pixels into weak, strong and non-relevant
 5. Hysteresis - changes weak pixels into strong if they have at least one
  strong neighbour
-### How to use?
-Image should be in one-channel representation, so before applying algorithm
-it needs to be converted (for example function convert from Pillow.Image).
-Applyling - use detect function giving image, low_threshold_ratio and
-high_threshold_ratio as parameters.
+ 
+ Before applying algorithm image is being converted to 1-channel representation
+ as implementation works only with images in this format.
+### How to use it?
+Download repository, install packages from requirements file and run main.py
+with appropriate arguments:
+
+1. image_path
+2. low_threshold_ratio - numerical value in 0.0 - 1.0 range
+3. high_threshold_ratio - numerical value in 0.0 - 1.0 range
